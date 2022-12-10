@@ -1,0 +1,90 @@
+{
+ "actions": [],
+ "allow_rename": 1,
+ "autoname": "field:razorpay_id",
+ "creation": "2022-11-23 23:51:51.176036",
+ "default_view": "Report",
+ "doctype": "DocType",
+ "editable_grid": 1,
+ "engine": "InnoDB",
+ "field_order": [
+  "payment_for",
+  "razorpay_id",
+  "link",
+  "column_break_4",
+  "status",
+  "amount",
+  "amount_paid"
+ ],
+ "fields": [
+  {
+   "fieldname": "payment_for",
+   "fieldtype": "Link",
+   "in_list_view": 1,
+   "label": "Payment For",
+   "options": "Payment Entry",
+   "reqd": 1
+  },
+  {
+   "default": "Created",
+   "fieldname": "status",
+   "fieldtype": "Select",
+   "label": "Status",
+   "options": "Created\nPaid\nCancelled\nExpired"
+  },
+  {
+   "fieldname": "amount",
+   "fieldtype": "Currency",
+   "label": "Amount",
+   "precision": "2"
+  },
+  {
+   "fieldname": "amount_paid",
+   "fieldtype": "Currency",
+   "label": "Amount Paid",
+   "precision": "2"
+  },
+  {
+   "fieldname": "link",
+   "fieldtype": "Data",
+   "label": "Link"
+  },
+  {
+   "fieldname": "razorpay_id",
+   "fieldtype": "Data",
+   "label": "Razorpay ID",
+   "reqd": 1,
+   "unique": 1
+  },
+  {
+   "fieldname": "column_break_4",
+   "fieldtype": "Column Break"
+  }
+ ],
+ "in_create": 1,
+ "index_web_pages_for_search": 1,
+ "links": [],
+ "modified": "2022-11-24 01:51:03.389025",
+ "modified_by": "Administrator",
+ "module": "Razorpay Payment Links Integration",
+ "name": "Razorpay Payment Links",
+ "naming_rule": "By fieldname",
+ "owner": "Administrator",
+ "permissions": [
+  {
+   "create": 1,
+   "delete": 1,
+   "email": 1,
+   "export": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "System Manager",
+   "share": 1,
+   "write": 1
+  }
+ ],
+ "sort_field": "modified",
+ "sort_order": "DESC",
+ "states": []
+}

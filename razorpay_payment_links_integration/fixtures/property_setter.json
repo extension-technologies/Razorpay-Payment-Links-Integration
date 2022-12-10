@@ -1,0 +1,18 @@
+[
+ {
+  "default_value": null,
+  "doc_type": "Payment Entry",
+  "docstatus": 0,
+  "doctype": "Property Setter",
+  "doctype_or_field": "DocField",
+  "field_name": "razorpay_payment_status",
+  "is_system_generated": 1,
+  "modified": "2022-12-11 01:35:01.214635",
+  "module": "Razorpay Payment Links Integration",
+  "name": "Payment Entry-razorpay_payment_status-in_list_view",
+  "property": "in_list_view",
+  "property_type": "Check",
+  "row_name": null,
+  "value": "1"
+ }
+]
