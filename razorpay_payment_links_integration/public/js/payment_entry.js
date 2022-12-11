@@ -1,5 +1,5 @@
-frappe.ui.form.on('Payment Entry', {
-	refresh(frm){
+frappe.ui.form.on("Payment Entry", {
+	refresh: function(frm) {
         if(frm.doc.razorpay_payment_link){
             frm.add_custom_button(__('Resend Notification'), () => {
                 frappe.call({
@@ -12,4 +12,4 @@ frappe.ui.form.on('Payment Entry', {
             })
         }
     }
-})
+});
