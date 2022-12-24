@@ -27,12 +27,15 @@ def resend_notification(**kwargs):
     paymentLinkId = kwargs['paymentLinkId']
     RazorpayController().resend_notification(paymentLinkId)
     
-
-def create_payment_link(pe_doc):
+@frappe.whitelist()
+def create_payment_link(**Kwargs):
     """
     create request on the basis of pe_doc
     then create a new Razorpay Payment link record if payment link is created
     """
+    pe_doc=json.loads(Kwargs['doc'])
+    frappe.log_error('create payment link',pe_doc)
+    
     contact_doc = frappe.get_doc('Contact', pe_doc.get('contact_person'))
 
     request = {}
@@ -54,7 +57,7 @@ def create_payment_link(pe_doc):
     request['callback_url'] = "https://erp.brivan.in/"
     request['callback_method'] = "get"
 
-    razorpayObj = RazorpayController().get_client()
+    razorpayObj = RazorpayController.get_client()
     link_obj = razorpayObj.payment_link.create(request)
 
     if(link_obj.get('error')):

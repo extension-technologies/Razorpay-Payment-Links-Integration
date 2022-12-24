@@ -16,11 +16,11 @@ doctype_js = {
 
 before_install = "razorpay_payment_links_integration.setup.install.before_install"
 
-doc_events = {
-	"Payment Entry": {
-		"before_submit": "razorpay_payment_links_integration.customizations.payment_entry.before_submit"
-	}
-}
+# doc_events = {
+# 	"Payment Entry": {
+# 		"before_submit": "razorpay_payment_links_integration.customizations.payment_entry.before_submit"
+# 	}
+# }
 
 fixtures = [
     {"dt": "Custom Field", "filters": [["module", "=", "Razorpay Payment Links Integration"]]},
