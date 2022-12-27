@@ -64,7 +64,7 @@
  "in_create": 1,
  "index_web_pages_for_search": 1,
  "links": [],
- "modified": "2022-11-24 01:51:03.389025",
+ "modified": "2022-12-27 18:14:07.145460",
  "modified_by": "Administrator",
  "module": "Razorpay Payment Links Integration",
  "name": "Razorpay Payment Links",
@@ -82,6 +82,15 @@
    "role": "System Manager",
    "share": 1,
    "write": 1
+  },
+  {
+   "create": 1,
+   "delete": 1,
+   "email": 1,
+   "read": 1,
+   "report": 1,
+   "role": "All",
+   "select": 1
   }
  ],
  "sort_field": "modified",

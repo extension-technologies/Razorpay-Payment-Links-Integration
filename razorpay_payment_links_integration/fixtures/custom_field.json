@@ -65,7 +65,7 @@
   "docstatus": 0,
   "doctype": "Custom Field",
   "dt": "Payment Entry",
-  "fetch_from": "razorpay_payment_link.status",
+  "fetch_from": "razorpay_payment_links.status",
   "fetch_if_empty": 1,
   "fieldname": "razorpay_payment_status",
   "fieldtype": "Data",

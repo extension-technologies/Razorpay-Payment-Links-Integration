@@ -8,19 +8,13 @@ app_email = "hello@extensionerp.com"
 app_license = "MIT"
 app_icon = "octicon credit-card"
 app_color = "blue"
-app_version = "0.0.3"
+app_version = "1.0.0"
 
 doctype_js = {
 	"Payment Entry" : "public/js/payment_entry.js"
 	}
 
 before_install = "razorpay_payment_links_integration.setup.install.before_install"
-
-# doc_events = {
-# 	"Payment Entry": {
-# 		"before_submit": "razorpay_payment_links_integration.customizations.payment_entry.before_submit"
-# 	}
-# }
 
 fixtures = [
     {"dt": "Custom Field", "filters": [["module", "=", "Razorpay Payment Links Integration"]]},

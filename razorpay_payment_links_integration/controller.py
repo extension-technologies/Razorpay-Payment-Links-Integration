@@ -27,6 +27,7 @@ def resend_notification(**kwargs):
     paymentLinkId = kwargs['paymentLinkId']
     RazorpayController().resend_notification(paymentLinkId)
     
+
 @frappe.whitelist()
 def create_payment_link(**Kwargs):
     """
@@ -34,17 +35,19 @@ def create_payment_link(**Kwargs):
     then create a new Razorpay Payment link record if payment link is created
     """
     pe_doc=json.loads(Kwargs['doc'])
-    frappe.log_error('create payment link',pe_doc)
     
     contact_doc = frappe.get_doc('Contact', pe_doc.get('contact_person'))
 
     request = {}
-    request['amount'] = pe_doc.get('paid_amount')
+    request['amount'] = int(pe_doc.get('paid_amount')) * 100 # convert it to smallest value
     request['currency'] = "INR"
-    request['description'] = "For SO" # to udpate
+
+    request['description'] = ""
+    for ref in pe_doc.get('references', []):
+        request['description'] = request['description'] + f"{ref.get('reference_doctype')}: {ref.get('reference_name')}, "
 
     request['customer'] = {}
-    request['customer']['name'] = f"{contact_doc.get('first_name', '')} {contact_doc.get('middle_name', '')} {contact_doc.get('last_name')}"
+    request['customer']['name'] = f"{contact_doc.get('first_name') or ''} {contact_doc.get('middle_name') or ''} {contact_doc.get('last_name') or ''}"
     request['customer']['email'] = contact_doc.get('email_id', '')
     request['customer']['contact'] = contact_doc.get('mobile_no', '')
 
@@ -54,10 +57,8 @@ def create_payment_link(**Kwargs):
             "whatsapp": True
         }
     request['reminder_enable'] = True
-    request['callback_url'] = "https://erp.brivan.in/"
-    request['callback_method'] = "get"
 
-    razorpayObj = RazorpayController.get_client()
+    razorpayObj = RazorpayController().get_client()
     link_obj = razorpayObj.payment_link.create(request)
 
     if(link_obj.get('error')):
@@ -70,13 +71,13 @@ def create_payment_link(**Kwargs):
         doc.link = link_obj.get('short_url')
         doc.amount = link_obj.get('amount')
         doc.insert()
+        frappe.db.set_value('Payment Entry', pe_doc.get('name'), 'razorpay_payment_link', doc.name)
         return doc
 
 
 @frappe.whitelist(allow_guest=True)
 def webhooks_handler():
     data = json.loads(frappe.request.data)
-    frappe.log_error('Razorpay', data)
     doc = False
 
     try:

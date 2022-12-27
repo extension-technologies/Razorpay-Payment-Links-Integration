@@ -30,5 +30,21 @@
   "property_type": "Check",
   "row_name": null,
   "value": "1"
+ },
+ {
+  "default_value": null,
+  "doc_type": "Payment Entry",
+  "docstatus": 0,
+  "doctype": "Property Setter",
+  "doctype_or_field": "DocField",
+  "field_name": "contact_person",
+  "is_system_generated": 0,
+  "modified": "2022-12-27 17:51:31.467468",
+  "module": "Razorpay Payment Links Integration",
+  "name": "Payment Entry-contact_person-reqd",
+  "property": "reqd",
+  "property_type": "Check",
+  "row_name": null,
+  "value": "1"
  }
 ]
