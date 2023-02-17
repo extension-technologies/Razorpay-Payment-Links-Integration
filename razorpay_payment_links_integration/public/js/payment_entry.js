@@ -30,6 +30,7 @@ frappe.ui.form.on("Payment Entry", {
                     callback: function (r) {
                         console.log(r);
                         frm.refresh();
+                        frm.reload_doc();
                     }
                 })
             })
