@@ -34,16 +34,20 @@ frappe.ui.form.on("Payment Entry", {
             })
         }
     },
-    before_submit: function (frm) {
+    before_submit: async function (frm) {
         if (frm.doc.razorpay_payment_link && frm.doc.razorpay_payment_status != "Paid") {
-            frappe.warn('Are you sure you want to proceed?',
-                'Payment Entry documents are supposed to be auto-submitted when the Payment confirmation is received from the Razorpay.',
-                () => {
-                    // action to perform if Continue is selected
+            let promise = new Promise((resolve, reject) => {
+                frappe.confirm('Payment Entry documents are supposed to be auto-submitted when the Payment confirmation is received from the Razorpay. Do you still want to continue?', () => {
+                    resolve()
                 },
-                'Continue',
-                true // Sets dialog as minimizable
-            )
+                    () => {
+                        reject()
+                    }).get_primary_btn().css('background-color', 'red').css('color', 'white')
+            });
+            await promise.catch(() => {
+                throw '';
+                frappe.validated = false;
+            });
         }
     }
 })
