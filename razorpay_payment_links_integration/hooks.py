@@ -14,6 +14,8 @@ doctype_js = {
 	"Payment Entry" : "public/js/payment_entry.js"
 	}
 
+override_doctype_class = {"Payment Entry": "razorpay_payment_links_integration.customizations.paymnet_entry.payment_entry.PaymentEntry"}
+
 before_install = "razorpay_payment_links_integration.setup.install.before_install"
 
 fixtures = [
