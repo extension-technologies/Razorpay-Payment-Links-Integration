@@ -54,7 +54,7 @@ frappe.ui.form.on("Payment Entry", {
             });
         }
     },
-    after_save: function(frm){
+    before_submit: function(frm){
         if (frm.doc.mode_of_payment == "Bank Transfer"&& frm.doc.posting_date) {
             // frappe.msgprint('Please Enter Reference No and Reference Date')
             frm.set_df_property('reference_no','reqd',1);
