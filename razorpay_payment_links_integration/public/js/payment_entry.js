@@ -15,6 +15,18 @@ frappe.ui.form.on("Payment Entry", {
                 });
             })
         }
+        if (frm.doc.razorpay_payment_link && (frm.doc.razorpay_payment_status !="Cancelled" && frm.doc.razorpay_payment_status !="Paid" )) {
+            frm.add_custom_button(__('Cancel Payment Link'), () => {
+                frappe.call({
+                    method: "razorpay_payment_links_integration.controller.cancel_payment_link",
+                    args: { "paymentLinkId": frm.doc.razorpay_payment_link },
+                    callback: function (r) {
+                        console.log(r);
+                        frm.reload_doc()
+                    }
+                });
+            })
+        }
         if (!frm.doc.__islocal && frm.doc.mode_of_payment == "Razorpay Payment Link" && !frm.doc.razorpay_payment_link) {
             frm.add_custom_button(__("Create payment Link "), () => {
                 if (!frm.doc.paid_amount) {
@@ -37,6 +49,7 @@ frappe.ui.form.on("Payment Entry", {
                 })
             })
         }
+        //  frm.set_value('login_user',frappe.user.full_name)
     },
     before_submit: async function (frm) {
         if (frm.doc.razorpay_payment_link && frm.doc.razorpay_payment_status != "Paid") {
@@ -54,12 +67,12 @@ frappe.ui.form.on("Payment Entry", {
             });
         }
     },
-    before_submit: function(frm){
-        if (frm.doc.mode_of_payment == "Bank Transfer"&& frm.doc.posting_date) {
+    mode_of_payment: function(frm){
+        if (frm.doc.mode_of_payment != "Razorpay Payment Link"&& frm.doc.posting_date) {
             // frappe.msgprint('Please Enter Reference No and Reference Date')
             frm.set_df_property('reference_no','reqd',1);
             frm.set_df_property("reference_date", "reqd", 1);
-            frm.save();
+            // frm.save();
         };
     },
     set_account_currency_and_balance: function(frm, account, currency_field,
@@ -83,12 +96,12 @@ frappe.ui.form.on("Payment Entry", {
 
                             if(frm.doc.payment_type=="Receive" && currency_field=="paid_to_account_currency") {
                                 frm.toggle_reqd(["reference_no", "reference_date"],
-                                    (r.message['account_type'] == "Bank" ? 0 : 1));
+                                    (r.message['account_type'] == "Bank" ? 0 : 1|| r.message['account_type'] == "Cash"? 0 : 1));
                                 if(!frm.doc.received_amount && frm.doc.paid_amount)
                                     frm.events.paid_amount(frm);
                             } else if(frm.doc.payment_type=="Pay" && currency_field=="paid_from_account_currency") {
                                 frm.toggle_reqd(["reference_no", "reference_date"],
-                                    (r.message['account_type'] == "Bank" ? 0 : 1));
+                                    (r.message['account_type'] == "Bank" ? 0 : 1 || r.message['account_type'] == "Cash" ? 0 : 1));
 
                                 if(!frm.doc.paid_amount && frm.doc.received_amount)
                                     frm.events.received_amount(frm);
@@ -113,6 +126,15 @@ frappe.ui.form.on("Payment Entry", {
             }
         });
     }
-}
-})
+},
+    sales_order_id: function(frm) {
+        var sales_order = frm.doc.sales_order_id;
+        frappe.model.with_doc('Sales Order', sales_order, function() {
+            var sales_order_doc = frappe.model.get_doc('Sales Order', sales_order);
+            frm.set_value('party', sales_order_doc.customer);
+            frm.set_value('party_name', sales_order_doc.customer_name);
+        });
+    }
 
+
+})
