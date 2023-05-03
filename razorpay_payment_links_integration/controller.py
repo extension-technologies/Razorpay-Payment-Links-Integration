@@ -21,11 +21,20 @@ class RazorpayController():
         self.client.payment_link.notifyBy(paymentLinkId, "sms")
         self.client.payment_link.notifyBy(paymentLinkId, "email")
 
+    def cancel_payment_link(self,paymentLinkId):
+        self.client.payment_link.cancel(paymentLinkId)
+
 
 @frappe.whitelist()
 def resend_notification(**kwargs):
     paymentLinkId = kwargs['paymentLinkId']
     RazorpayController().resend_notification(paymentLinkId)
+
+
+@frappe.whitelist()
+def cancel_payment_link(**kwargs):
+    paymentLinkId = kwargs['paymentLinkId']
+    RazorpayController().cancel_payment_link(paymentLinkId)
     
 
 @frappe.whitelist()
@@ -78,6 +87,7 @@ def create_payment_link(**Kwargs):
 @frappe.whitelist(allow_guest=True)
 def webhooks_handler():
     data = json.loads(frappe.request.data)
+    frappe.log_error('Razorpay webhook data', f'{data}')
     doc = False
 
     try:
@@ -85,10 +95,22 @@ def webhooks_handler():
         razorpay_id = data.get('payload').get('payment_link').get('entity').get('id')
         doc = frappe.get_doc('Razorpay Payment Links', razorpay_id)
     except:
-        frappe.log_error('Razorpay Webhooks Error', data)
+        frappe.log_error('Razorpay Webhook Error', data)
 
     if(doc):
-        if(event == "payment_link.paid"): doc.status = "Paid"
+        if(event == "payment_link.paid"): 
+            doc.status = "Paid"
+            doc.reference_date = frappe.utils.today()
+            payment = data.get('payload').get('payment').get('entity')
+            if(payment.get('method') == "upi"):
+                doc.reference_no = payment.get('acquirer_data').get('rrn')
+            elif(payment.get('method') == "netbanking"):
+                doc.reference_no = payment.get('acquirer_data').get('bank_transaction_id')
+            elif(payment.get('method') == "card"):
+                doc.reference_no = payment.get('acquirer_data').get('auth_code')
+
         if(event == "payment_link.cancelled"): doc.status = "Cancelled"
         if(event == "payment_link.expired"): doc.status = "Expired"
+
         doc.save(ignore_permissions=True)
+        return True

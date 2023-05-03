@@ -12,6 +12,8 @@ class RazorpayPaymentLinks(Document):
 					pe_doc = frappe.get_doc('Payment Entry', self.get('payment_for'))
 					if(pe_doc.razorpay_payment_status != "Paid" and pe_doc.docstatus != 1):
 						pe_doc.razorpay_payment_status = "Paid"
+						pe_doc.reference_no = self.reference_no if self.reference_no else ""
+						pe_doc.reference_date = self.get('reference_date') if self.get('reference_date') else None
 						pe_doc.docstatus = 1
 						pe_doc.save(ignore_permissions=True)
 				except:

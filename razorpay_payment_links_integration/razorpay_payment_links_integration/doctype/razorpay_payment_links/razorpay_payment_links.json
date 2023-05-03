@@ -11,10 +11,12 @@
   "payment_for",
   "razorpay_id",
   "link",
+  "reference_no",
   "column_break_4",
   "status",
   "amount",
-  "amount_paid"
+  "amount_paid",
+  "reference_date"
  ],
  "fields": [
   {
@@ -59,12 +61,22 @@
   {
    "fieldname": "column_break_4",
    "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "reference_no",
+   "fieldtype": "Data",
+   "label": "Reference No"
+  },
+  {
+   "fieldname": "reference_date",
+   "fieldtype": "Date",
+   "label": "Reference Date"
   }
  ],
  "in_create": 1,
  "index_web_pages_for_search": 1,
  "links": [],
- "modified": "2022-12-27 18:14:07.145460",
+ "modified": "2023-04-27 13:51:56.684611",
  "modified_by": "Administrator",
  "module": "Razorpay Payment Links Integration",
  "name": "Razorpay Payment Links",
