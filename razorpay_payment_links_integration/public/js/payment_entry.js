@@ -188,55 +188,6 @@ frappe.ui.form.on("Payment Entry", {
 })
 
 frappe.ui.form.on('Payment Entry Reference', {
-	before_save:function(frm,cdt,cdn) {
-        let total = 0;
-        frm.doc.references.forEach(i => {
-            total += i.tds
-        })
-        if (frm.doc.deductions.length == 0){
-            let new_row = frm.add_child("deductions");
-            if (frm.doc.company=="Mycorporation Consultants Private Limited"){
-                new_row.account = 'TDS Payable - MCPL'
-                new_row.cost_center = "Main - MCPL"
-                new_row.amount = total
-                frm.refresh_field('deductions')
-            } else if (frm.doc.company=="Brivan Consultants Private Limited") {
-                new_row.account = 'TDS Payable - BCL'
-                new_row.cost_center = "Main - BCL"
-                new_row.amount = total
-            } else{
-                new_row.account = 'TDS Payable - KJ'
-                new_row.cost_center = "Main - KJ "
-                new_row.amount = total
-            }}
-    
-            if (frm.doc.deductions.length > 0){
-            for (let b = 0;b<frm.doc.deductions.length; b++){
-
-                if (frm.doc.deductions[b].account != "TDS Payable - MCPL"){
-                    let new_row = frm.add_child("deductions");
-                    if (frm.doc.company=="Mycorporation Consultants Private Limited"){
-                        new_row.account = 'TDS Payable - MCPL'
-                        new_row.cost_center = "Main - MCPL"
-                        new_row.amount = total
-                        frm.refresh_field('deductions')
-                    } else if (frm.doc.company=="Brivan Consultants Private Limited") {
-                        new_row.account = 'TDS Payable - BCL'
-                        new_row.cost_center = "Main - BCL"
-                        new_row.amount =total
-                    } else{
-                        new_row.account = 'TDS Payable - KJ'
-                        new_row.cost_center = "Main - KJ "
-                        new_row.amount = total
-                    }}
-                else if(frm.doc.deductions[b].account == "TDS Payable - MCPL"){
-                    
-                    frm.doc.deductions[b].amount = 0
-                    frm.doc.deductions[b].amount =  total
-                    frm.refresh_field('deductions')
-                }
-            }
-        }},
         references_remove(frm){
             let total = 0
             frm.doc.references.forEach(i => {
