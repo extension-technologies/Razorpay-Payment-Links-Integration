@@ -135,25 +135,25 @@ frappe.ui.form.on("Payment Entry", {
             frm.set_value('party_name', sales_order_doc.customer_name);
         });
     },
-    after_save:function(frm) {
+    validate:function(frm) {
         let total = 0;
         frm.doc.references.forEach(i => {
             total += i.tds
         })
-        console.log(total)
+        // console.log(total)
         if (!frm.doc.deductions || frm.doc.deductions.length == 0){
             let new_row = frm.add_child("deductions");
             if (frm.doc.company=="Mycorporation Consultants Private Limited"){
-                new_row.account = 'TDS Payable - MCPL'
+                new_row.account = 'TDS Receivable - MCPL'
                 new_row.cost_center = "Main - MCPL"
                 new_row.amount = isNaN(total) ? 0 : total
                 frm.refresh_field('deductions')
             } else if (frm.doc.company=="Brivan Consultants Private Limited") {
-                new_row.account = 'TDS Payable - BCL'
+                new_row.account = 'TDS Receivable - BCL'
                 new_row.cost_center = "Main - BCL"
                 new_row.amount = total
             } else{
-                new_row.account = 'TDS Payable - KJ'
+                new_row.account = 'TDS Receivable - KJ'
                 new_row.cost_center = "Main - KJ "
                 new_row.amount = total
             }}
@@ -161,30 +161,28 @@ frappe.ui.form.on("Payment Entry", {
             if (frm.doc.deductions.length > 0){
             for (let b = 0;b<frm.doc.deductions.length; b++){
 
-                if (frm.doc.deductions[b].account != "TDS Payable - MCPL"){
+                if (frm.doc.deductions[b].account != "TDS Payable - MCPL" && frm.doc.deductions[b].account != "TDS - BCL" && frm.doc.deductions[b].account != "TDS Receivable - KJ" ){
                     let new_row = frm.add_child("deductions");
                     if (frm.doc.company=="Mycorporation Consultants Private Limited"){
-                        new_row.account = 'TDS Payable - MCPL'
+                        new_row.account = 'TDS Receivable - MCPL'
                         new_row.cost_center = "Main - MCPL"
                         new_row.amount = total
                         frm.refresh_field('deductions')
                     } else if (frm.doc.company=="Brivan Consultants Private Limited") {
-                        new_row.account = 'TDS Payable - BCL'
+                        new_row.account = 'TDS Receivable - BCL'
                         new_row.cost_center = "Main - BCL"
                         new_row.amount =total
                     } else{
-                        new_row.account = 'TDS Payable - KJ'
+                        new_row.account = 'TDS Receivable - KJ'
                         new_row.cost_center = "Main - KJ "
                         new_row.amount = total
                     }}
-                else if(frm.doc.deductions[b].account == "TDS Payable - MCPL"){
+                else if(frm.doc.deductions[b].account == "TDS Receivable - MCPL" || frm.doc.deductions[b].account == "TDS Receivable - BCL" || frm.doc.deductions[b].account == "TDS Receivable - KJ" ){
                     frm.doc.deductions[b].amount =  isNaN(total) ? 0 : total
                     frm.refresh_field('deductions')
                 }
             }
         }}
-        
-
 })
 
 frappe.ui.form.on('Payment Entry Reference', {
@@ -195,9 +193,10 @@ frappe.ui.form.on('Payment Entry Reference', {
             })
             for (let b = 0;b<frm.doc.deductions.length; b++){
 
-                if (frm.doc.deductions[b].account != "TDS Payable - MCPL"){
-                    return}
-                else if(frm.doc.deductions[b].account == "TDS Payable - MCPL"){
+                if (frm.doc.deductions[b].account != "TDS Receivable - MCPL" ||frm.doc.deductions[b].account != "TDS Receivable - BCL" ||frm.doc.deductions[b].account == "TDS Receivable - KJ"){
+                    return
+                }
+                else if(frm.doc.deductions[b].account == "TDS Receivable - MCPL"||frm.doc.deductions[b].account == "TDS Receivable - BCL"||frm.doc.deductions[b].account == "TDS Receivable - KJ"){
                     
                     frm.doc.deductions[b].amount = 0
                     frm.doc.deductions[b].amount =  total
