@@ -161,7 +161,7 @@ frappe.ui.form.on("Payment Entry", {
             if (frm.doc.deductions.length > 0){
             for (let b = 0;b<frm.doc.deductions.length; b++){
 
-                if (frm.doc.deductions[b].account != "TDS Payable - MCPL" && frm.doc.deductions[b].account != "TDS - BCL" && frm.doc.deductions[b].account != "TDS Receivable - KJ" ){
+                if (frm.doc.deductions[b].account != "TDS Receivable - MCPL" && frm.doc.deductions[b].account != "TDS Receivable - BCL" && frm.doc.deductions[b].account != "TDS Receivable - KJ" ){
                     let new_row = frm.add_child("deductions");
                     if (frm.doc.company=="Mycorporation Consultants Private Limited"){
                         new_row.account = 'TDS Receivable - MCPL'
